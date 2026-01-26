@@ -1,0 +1,36 @@
+# Terraform Files
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# AWS Credentials and Keys
+*.pem
+*.ppk
+.aws/
+credentials
+config
+
+# Go Build Files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/vendor/
+go.work
+
+# Large Files and Binaries
+*.zip
+*.tar.gz
+*.rar
