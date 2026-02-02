@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # Your Go album server
+  album-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - "8080:8080"
+    networks:
+      - locust-network
+    container_name: album-server
+
+  # Locust master node
+  locust-master:
+    image: locustio/locust:latest
+    ports:
+      - "8089:8089"  # Web UI
+    volumes:
+      - ./locustfile.py:/mnt/locust/locustfile.py
+    command: -f /mnt/locust/locustfile.py --master
+    networks:
+      - locust-network
+    container_name: locust-master
+    environment:
+      - LOCUST_LOCUSTFILE=/mnt/locust/locustfile.py
+
+  # Locust worker node(s)
+  # Scale this service to add more workers: docker-compose up --scale locust-worker=4
+  locust-worker:
+    image: locustio/locust:latest
+    volumes:
+      - ./locustfile.py:/mnt/locust/locustfile.py
+    command: -f /mnt/locust/locustfile.py --worker --master-host=locust-master
+    networks:
+      - locust-network
+    depends_on:
+      - locust-master
+      - album-server
+    environment:
+      - LOCUST_LOCUSTFILE=/mnt/locust/locustfile.py
+
+networks:
+  locust-network:
+    driver: bridge
+
+
+# USAGE INSTRUCTIONS
+# ==================
+#
+# 1. Start with 1 worker (default):
+#    docker-compose up
+#
+# 2. Scale to 4 workers (for Amdahl's Law experiment):
+#    docker-compose up --scale locust-worker=4
+#
+# 3. Access Locust Web UI:
+#    http://localhost:8089
+#
+# 4. Monitor resources:
+#    docker stats
+#
+# 5. Stop all services:
+#    docker-compose down
+#
+# EXPERIMENT PARAMETERS IN WEB UI
+# ================================
+#
+# Experiment 1 - Basic Test:
+# - Number of users: 1
+# - Spawn rate: 1
+# - Host: http://album-server:8080
+#
+# Experiment 2 - Load Test:
+# - Number of users: 50
+# - Spawn rate: 10 (10 users/second ramp up)
+# - Host: http://album-server:8080
+#
+# Experiment 3 - Amdahl's Law:
+# - Scale workers: docker-compose up --scale locust-worker=4
+# - Number of users: 50
+# - Spawn rate: 10
+# - Compare results with 1 worker
+#
+# Experiment 4 - FastHttpUser:
+# - Edit locustfile.py: change AlbumUser to AlbumFastHttpUser
+# - Restart: docker-compose restart
+# - Run same parameters as Experiment 2
