@@ -30,7 +30,7 @@ func main() {
 	for g := 0; g < 50; g++ {
 		wg.Go(func() {
 			for i := 0; i < 1000; i++ {
-				c.work(g, i)
+				c.work(g*1000+i, i)
 			}
 		})
 	}
