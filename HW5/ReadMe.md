@@ -35,6 +35,8 @@ terraform init
 terraform apply
 ```
 ## Access the API
+
+### Get repository_url
 ```
 terraform state show module.ecr.aws_ecr_repository.this | grep repository_url
 ```
