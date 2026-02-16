@@ -6,7 +6,7 @@
 - Locust
 
 ### Running Locally
-\`\`\`bash
+```bash
 cd src/
 go run main.go
-\`\`\`
+```
