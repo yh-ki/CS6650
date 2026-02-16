@@ -25,5 +25,5 @@ curl -X POST http://localhost:8080/products/1/details \
   }'
 
 # Get specific product
-curl http://localhost:8080/products/"product_id"
+curl http://localhost:8080/products/1
 ```
