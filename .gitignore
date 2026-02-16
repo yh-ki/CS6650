@@ -1,6 +1,7 @@
 # Terraform Files
 *.tfstate
 *.tfstate.*
+*.tfstate.backup
 *.tfvars
 *.tfvars.json
 .terraform/
@@ -18,6 +19,7 @@ override.tf.json
 .aws/
 credentials
 config
+aws_credentials
 
 # Go Build Files
 *.exe
@@ -29,8 +31,74 @@ config
 *.out
 /vendor/
 go.work
+bin/
+dist/
 
 # Large Files and Binaries
 *.zip
 *.tar.gz
 *.rar
+*.iso
+*.img
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Python (for Locust)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+ENV/
+env/
+.venv
+*.egg-info/
+.pytest_cache/
+
+# Locust Output
+locust.log
+*.csv
+locust_stats*.html
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+
+# Database Files (if testing locally)
+*.db
+*.sqlite
+*.sqlite3
+
+# Screenshots (optional - you might want to commit these for your assignment)
+# screenshots/
