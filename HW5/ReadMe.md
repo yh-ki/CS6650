@@ -59,14 +59,10 @@ terraform apply
 ```
 ## Access the API
 
-### Get repository_url
-```
-terraform state show module.ecr.aws_ecr_repository.this | grep repository_url
-```
 ### Testing Deployment
 ```bash
 # Create a product
-curl -X POST http://<repository_url>:8080/products/1/details \
+curl -X POST http://<your_task_public_IP>:8080/products/1/details \
   -H "Content-Type: application/json" \
   -d '{
     "product_id": 1,
@@ -78,11 +74,11 @@ curl -X POST http://<repository_url>:8080/products/1/details \
   }'
 
 # Get specific product
-curl http://<repository_url>:8080/products/1
+curl http://<your_task_public_IP>:8080/products/1
 ```
 
 ### Load Testing
 
 ```bash
-locust -f tests/locustfile.py --host=http://<repository_url>
+locust -f tests/locustfile.py --host=http://<your_task_public_IP>
 ```
