@@ -40,6 +40,23 @@ terraform apply
 ```
 terraform state show module.ecr.aws_ecr_repository.this | grep repository_url
 ```
+### Testing Deployment
+```bash
+# Create a product
+curl -X POST http://<repository_url>:8080/products/1/details \
+  -H "Content-Type: application/json" \
+  -d '{
+    "product_id": 1,
+    "sku": "LAPTOP-001",
+    "manufacturer": "TechCorp",
+    "category_id": 5,
+    "weight": 2500,
+    "some_other_id": 100
+  }'
+
+# Get specific product
+curl http://<repository_url>:8080/products/1
+```
 
 ### Load Testing
 
