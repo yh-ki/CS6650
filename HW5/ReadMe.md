@@ -1,3 +1,27 @@
+## Project Structure
+```
+├── ReadMe.md
+├── locustfile.py
+├── src
+│   ├── Dockerfile
+│   ├── go.mod
+│   ├── go.sum
+│   ├── main.go
+│   └── terraform.tfstate
+├── terraform
+   ├── main.tf
+   ├── modules
+   │   ├── ecr
+   │   ├── ecs
+   │   ├── logging
+   │   └── network
+   ├── outputs.tf
+   ├── provider.tf
+   ├── terraform.tfstate
+   └── variables.tf
+
+```
+
 ## Prerequisites
 - Go 1.21+
 - Docker
