@@ -34,12 +34,12 @@ cd terraform/
 terraform init
 terraform apply
 ```
-### 3. Access the API
+## Access the API
 ```
 terraform state show module.ecr.aws_ecr_repository.this | grep repository_url
 ```
 
-## Load Testing
+### Load Testing
 
 ```bash
 locust -f tests/locustfile.py --host=http://<repository_url>
