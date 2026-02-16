@@ -7,8 +7,7 @@ HW5
 │   ├── Dockerfile
 │   ├── go.mod
 │   ├── go.sum
-│   ├── main.go
-│   └── terraform.tfstate
+│   └──  main.go
 ├── terraform
    ├── main.tf
    ├── modules
@@ -18,7 +17,6 @@ HW5
    │   └── network
    ├── outputs.tf
    ├── provider.tf
-   ├── terraform.tfstate
    └── variables.tf
 
 ```
