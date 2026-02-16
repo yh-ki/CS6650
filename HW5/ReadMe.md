@@ -7,6 +7,6 @@
 
 ### Running Locally
 ```bash
-cd src/
+cd src
 go run main.go
 ```
