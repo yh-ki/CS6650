@@ -41,6 +41,6 @@ terraform state show module.ecr.aws_ecr_repository.this | grep repository_url
 
 ## Load Testing
 
-\`\`\`bash
+```bash
 locust -f tests/locustfile.py --host=http://<repository_url>
-\`\`\`
+```
