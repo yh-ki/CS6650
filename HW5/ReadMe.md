@@ -59,6 +59,13 @@ terraform apply
 ```
 ## Access the API
 
+### Via AWS Console
+1. Go to ECS → Clusters → product-api-cluster
+2. Click Tasks tab
+3. Click on your running task
+4. Scroll down to Network section
+5. Look for Public IP
+
 ### Testing Deployment
 ```bash
 # Create a product
