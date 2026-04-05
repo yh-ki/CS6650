@@ -1,0 +1,353 @@
+# docker-compose.yml
+#
+# Four cluster configurations, each as a named profile.
+# Start one at a time:
+#
+#   docker compose --profile lf-w5-r1 up --build   # Leader-Follower W=5 R=1
+#   docker compose --profile lf-w1-r5 up --build   # Leader-Follower W=1 R=5
+#   docker compose --profile lf-w3-r3 up --build   # Leader-Follower W=3 R=3 (quorum)
+#   docker compose --profile leaderless up --build  # Leaderless W=5 R=1
+#
+# All nodes in a profile share a dedicated Docker network so hostnames
+# resolve automatically (e.g. "leader", "follower-1", "node-1").
+#
+# The leader/coordinator is always reachable from the host at port 8080.
+# Individual followers/peers are at 8081-8084 for direct testing.
+
+# ---------------------------------------------------------------------------
+# Profile: lf-w5-r1  (Leader-Follower, synchronous writes, fast local reads)
+# ---------------------------------------------------------------------------
+services:
+
+  lf-w5r1-leader:
+    build: ./leader-follower
+    profiles: [lf-w5-r1]
+    networks: [lf-w5r1-net]
+    hostname: leader
+    ports:
+      - "8080:8080"
+    environment:
+      ROLE: leader
+      PORT: "8080"
+      W: "5"
+      R: "1"
+      PEERS: >-
+        http://follower-1:8080,
+        http://follower-2:8080,
+        http://follower-3:8080,
+        http://follower-4:8080
+    depends_on:
+      - lf-w5r1-follower-1
+      - lf-w5r1-follower-2
+      - lf-w5r1-follower-3
+      - lf-w5r1-follower-4
+
+  lf-w5r1-follower-1:
+    build: ./leader-follower
+    profiles: [lf-w5-r1]
+    networks: [lf-w5r1-net]
+    hostname: follower-1
+    ports:
+      - "8081:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "1"
+
+  lf-w5r1-follower-2:
+    build: ./leader-follower
+    profiles: [lf-w5-r1]
+    networks: [lf-w5r1-net]
+    hostname: follower-2
+    ports:
+      - "8082:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "2"
+
+  lf-w5r1-follower-3:
+    build: ./leader-follower
+    profiles: [lf-w5-r1]
+    networks: [lf-w5r1-net]
+    hostname: follower-3
+    ports:
+      - "8083:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "3"
+
+  lf-w5r1-follower-4:
+    build: ./leader-follower
+    profiles: [lf-w5-r1]
+    networks: [lf-w5r1-net]
+    hostname: follower-4
+    ports:
+      - "8084:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "4"
+
+# ---------------------------------------------------------------------------
+# Profile: lf-w1-r5  (Leader-Follower, async writes, read-all-pick-best)
+# ---------------------------------------------------------------------------
+
+  lf-w1r5-leader:
+    build: ./leader-follower
+    profiles: [lf-w1-r5]
+    networks: [lf-w1r5-net]
+    hostname: leader
+    ports:
+      - "8080:8080"
+    environment:
+      ROLE: leader
+      PORT: "8080"
+      W: "1"
+      R: "5"
+      PEERS: >-
+        http://follower-1:8080,
+        http://follower-2:8080,
+        http://follower-3:8080,
+        http://follower-4:8080
+    depends_on:
+      - lf-w1r5-follower-1
+      - lf-w1r5-follower-2
+      - lf-w1r5-follower-3
+      - lf-w1r5-follower-4
+
+  lf-w1r5-follower-1:
+    build: ./leader-follower
+    profiles: [lf-w1-r5]
+    networks: [lf-w1r5-net]
+    hostname: follower-1
+    ports:
+      - "8081:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "1"
+
+  lf-w1r5-follower-2:
+    build: ./leader-follower
+    profiles: [lf-w1-r5]
+    networks: [lf-w1r5-net]
+    hostname: follower-2
+    ports:
+      - "8082:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "2"
+
+  lf-w1r5-follower-3:
+    build: ./leader-follower
+    profiles: [lf-w1-r5]
+    networks: [lf-w1r5-net]
+    hostname: follower-3
+    ports:
+      - "8083:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "3"
+
+  lf-w1r5-follower-4:
+    build: ./leader-follower
+    profiles: [lf-w1-r5]
+    networks: [lf-w1r5-net]
+    hostname: follower-4
+    ports:
+      - "8084:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "4"
+
+# ---------------------------------------------------------------------------
+# Profile: lf-w3-r3  (Leader-Follower, quorum reads and writes)
+# ---------------------------------------------------------------------------
+
+  lf-w3r3-leader:
+    build: ./leader-follower
+    profiles: [lf-w3-r3]
+    networks: [lf-w3r3-net]
+    hostname: leader
+    ports:
+      - "8080:8080"
+    environment:
+      ROLE: leader
+      PORT: "8080"
+      W: "3"
+      R: "3"
+      PEERS: >-
+        http://follower-1:8080,
+        http://follower-2:8080,
+        http://follower-3:8080,
+        http://follower-4:8080
+    depends_on:
+      - lf-w3r3-follower-1
+      - lf-w3r3-follower-2
+      - lf-w3r3-follower-3
+      - lf-w3r3-follower-4
+
+  lf-w3r3-follower-1:
+    build: ./leader-follower
+    profiles: [lf-w3-r3]
+    networks: [lf-w3r3-net]
+    hostname: follower-1
+    ports:
+      - "8081:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "1"
+
+  lf-w3r3-follower-2:
+    build: ./leader-follower
+    profiles: [lf-w3-r3]
+    networks: [lf-w3r3-net]
+    hostname: follower-2
+    ports:
+      - "8082:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "2"
+
+  lf-w3r3-follower-3:
+    build: ./leader-follower
+    profiles: [lf-w3-r3]
+    networks: [lf-w3r3-net]
+    hostname: follower-3
+    ports:
+      - "8083:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "3"
+
+  lf-w3r3-follower-4:
+    build: ./leader-follower
+    profiles: [lf-w3-r3]
+    networks: [lf-w3r3-net]
+    hostname: follower-4
+    ports:
+      - "8084:8080"
+    environment:
+      ROLE: follower
+      PORT: "8080"
+      NODE_ID: "4"
+
+# ---------------------------------------------------------------------------
+# Profile: leaderless  (any node is write coordinator, W=5 R=1)
+# ---------------------------------------------------------------------------
+
+  node-1:
+    build: ./leaderless
+    profiles: [leaderless]
+    networks: [leaderless-net]
+    hostname: node-1
+    ports:
+      - "8080:8080"
+    environment:
+      ROLE: leaderless
+      PORT: "8080"
+      NODE_ID: "1"
+      W: "5"
+      R: "1"
+      PEERS: >-
+        http://node-2:8080,
+        http://node-3:8080,
+        http://node-4:8080,
+        http://node-5:8080
+
+  node-2:
+    build: ./leaderless
+    profiles: [leaderless]
+    networks: [leaderless-net]
+    hostname: node-2
+    ports:
+      - "8081:8080"
+    environment:
+      ROLE: leaderless
+      PORT: "8080"
+      NODE_ID: "2"
+      W: "5"
+      R: "1"
+      PEERS: >-
+        http://node-1:8080,
+        http://node-3:8080,
+        http://node-4:8080,
+        http://node-5:8080
+
+  node-3:
+    build: ./leaderless
+    profiles: [leaderless]
+    networks: [leaderless-net]
+    hostname: node-3
+    ports:
+      - "8082:8080"
+    environment:
+      ROLE: leaderless
+      PORT: "8080"
+      NODE_ID: "3"
+      W: "5"
+      R: "1"
+      PEERS: >-
+        http://node-1:8080,
+        http://node-2:8080,
+        http://node-4:8080,
+        http://node-5:8080
+
+  node-4:
+    build: ./leaderless
+    profiles: [leaderless]
+    networks: [leaderless-net]
+    hostname: node-4
+    ports:
+      - "8083:8080"
+    environment:
+      ROLE: leaderless
+      PORT: "8080"
+      NODE_ID: "4"
+      W: "5"
+      R: "1"
+      PEERS: >-
+        http://node-1:8080,
+        http://node-2:8080,
+        http://node-3:8080,
+        http://node-5:8080
+
+  node-5:
+    build: ./leaderless
+    profiles: [leaderless]
+    networks: [leaderless-net]
+    hostname: node-5
+    ports:
+      - "8084:8080"
+    environment:
+      ROLE: leaderless
+      PORT: "8080"
+      NODE_ID: "5"
+      W: "5"
+      R: "1"
+      PEERS: >-
+        http://node-1:8080,
+        http://node-2:8080,
+        http://node-3:8080,
+        http://node-4:8080
+
+# ---------------------------------------------------------------------------
+# Networks — one isolated bridge per profile so profiles don't interfere
+# ---------------------------------------------------------------------------
+networks:
+  lf-w5r1-net:
+    driver: bridge
+  lf-w1r5-net:
+    driver: bridge
+  lf-w3r3-net:
+    driver: bridge
+  leaderless-net:
+    driver: bridge
